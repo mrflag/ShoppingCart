@@ -47,11 +47,11 @@
   <ItemGroup>
     <Compile Include="Cart.cs" />
     <Compile Include="Discount.cs" />
-    <Compile Include="FileReader.cs" />
+    <Compile Include="DataReader.cs" />
     <Compile Include="Product.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ShoppingCartMain.cs" />
+    <Compile Include="ShoppingCartHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

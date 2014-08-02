@@ -4,9 +4,9 @@ using Newtonsoft.Json;
 
 namespace ShoppingCart
 {
-    public static class FileReader
+    public static class DataReader
     {
-        private static IList<T> LoadObjectFromFile<T>(string fileName)
+        private static IList<T> LoadObjectFromJsonFile<T>(string fileName)
         {
             var fileText = File.ReadAllText(@"./Data/" + fileName + ".json");
 
@@ -17,13 +17,13 @@ namespace ShoppingCart
 
         public static IList<Discount> LoadDiscounts()
         {
-            var list = LoadObjectFromFile<Discount>("discounts");
+            var list = LoadObjectFromJsonFile<Discount>("discounts");
             return list;
         }
 
         public static IList<Product> LoadProducts()
         {
-            var list = LoadObjectFromFile<Product>("products");
+            var list = LoadObjectFromJsonFile<Product>("products");
             return list;
         }
     }

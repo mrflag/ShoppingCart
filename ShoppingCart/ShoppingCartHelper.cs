@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ShoppingCart
 {
-    public class ShoppingCartMain
+    public class ShoppingCartHelper
     {
 
         private IList<Product> productList = new List<Product>();
@@ -12,8 +12,8 @@ namespace ShoppingCart
 
         public void LoadData()
         {
-            discountList = FileReader.LoadDiscounts();
-            productList = FileReader.LoadProducts();
+            discountList = DataReader.LoadDiscounts();
+            productList = DataReader.LoadProducts();
         }
 
         public Product GetProductById(int id)
@@ -25,7 +25,5 @@ namespace ShoppingCart
         {
             return discountList.FirstOrDefault(a => a.Code.Equals(code,StringComparison.InvariantCultureIgnoreCase));
         }
-
-        
     }
 }

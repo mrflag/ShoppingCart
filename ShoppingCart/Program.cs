@@ -9,36 +9,33 @@ namespace ShoppingCart
 {
     class Program
     {
-        static ShoppingCartMain shoppingCartMain = new ShoppingCartMain();
-        static Cart cart = new Cart();
+        private static ShoppingCartHelper _shoppingCartHelper = new ShoppingCartHelper();
+        private static Cart _cart = new Cart();
         private static bool isProductLoopActive = true;
         private static bool isDiscountLoopActive = true;
 
         static void Main(string[] args)
         {
-            shoppingCartMain.LoadData();
+            _shoppingCartHelper.LoadData();
 
             Console.WriteLine("-- Bem-vindo ao Carrinho de Compras!");
             Console.WriteLine("");
 
             do
             {
-                ManageProduct();
+                ProductLoop();
             } while (isProductLoopActive == true);
 
             do
             {
-                ManageDiscount();
+                DiscountLoop();
             } while (isDiscountLoopActive == true);
 
 
-            cart.Summary();
-
-
-            
+            _cart.PrintSummary();
         }
 
-        public static void ManageProduct()
+        public static void ProductLoop()
         {
             int productId;
 
@@ -46,7 +43,7 @@ namespace ShoppingCart
             var readProductId = Console.ReadLine();
             int.TryParse(readProductId, out productId);
 
-            var product = shoppingCartMain.GetProductById(productId);
+            var product = _shoppingCartHelper.GetProductById(productId);
 
             if (product == null)
             {
@@ -55,7 +52,7 @@ namespace ShoppingCart
             }
             else
             {
-                cart.Add(product);
+                _cart.Add(product);
                 Console.WriteLine("O produto '" + product.Name + "' foi adicionado!");
                 Console.WriteLine("");
 
@@ -74,7 +71,7 @@ namespace ShoppingCart
             }
         }
 
-        public static void ManageDiscount()
+        public static void DiscountLoop()
         {
             Console.WriteLine("Deseja adicionar um cupom de desconto [S/n]?");
             string applyDiscount = Console.ReadLine();
@@ -84,11 +81,11 @@ namespace ShoppingCart
                 Console.WriteLine("Digite o código do cupom:");
                 string coupom = Console.ReadLine();
 
-                var discount = shoppingCartMain.GetDiscountByCode(coupom);
+                var discount = _shoppingCartHelper.GetDiscountByCode(coupom);
 
                 if (discount != null)
                 {
-                    cart.ApplyDiscount(discount);
+                    _cart.ApplyDiscount(discount);
                     Console.WriteLine("O desconto foi aplicado!");
                     isDiscountLoopActive = false;
                 }
@@ -96,6 +93,11 @@ namespace ShoppingCart
                 {
                     Console.WriteLine("Coupom Inválido");
                 }
+            }
+            else
+            if (applyDiscount != null && applyDiscount.Equals("N", StringComparison.InvariantCultureIgnoreCase))
+            {
+                isDiscountLoopActive = false;
             }
         }
     }

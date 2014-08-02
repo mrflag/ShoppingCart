@@ -11,7 +11,8 @@ namespace ShoppingCart
         private IList<Product> _products = new List<Product>();
         private Discount _appliedDiscount = new Discount();
 
-        public IList<Product> Products { get { return _products; } }
+        decimal subtotal = 0;
+        string discount = string.Empty;
 
         public void Add(Product product)
         {
@@ -23,21 +24,67 @@ namespace ShoppingCart
             _appliedDiscount = discount;
         }
 
-        public Discount GetDiscount()
+        public decimal ProcessCart()
         {
-            return _appliedDiscount;
+            subtotal = _products.Sum(a => a.Price);
+            discount = string.Empty;
+            
+            if (_appliedDiscount.Amount != 0)
+            {
+                switch (_appliedDiscount.Type)
+                {
+                    case "percentage":
+                        discount = _appliedDiscount.Amount + "%";
+                        subtotal = subtotal * (1 + (_appliedDiscount.Amount / 100));
+                        break;
+
+                    case "fixed":
+
+                        discount = _appliedDiscount.Amount.ToString("C");
+                        subtotal = subtotal - _appliedDiscount.Amount;
+                        break;
+
+                    default:
+                        discount = "R$ 0,00";
+                        break;
+                }
+            }
+            else
+            {
+                discount = "R$ 0,00";
+            }
+            
+
+            try
+            {
+                return Convert.ToDecimal(subtotal);
+            }
+            catch(Exception e)
+            {
+                throw new System.Exception("Não foi possível processar o carrinho de compras. Erro: " + e.Message);
+            }
+
         }
 
-        public void Summary()
+        public void PrintSummary()
         {
-            //foreach (var cartProduct in cart.Products)
-            //{
-            //    Console.WriteLine(cartProduct.Id + " " + cartProduct.Name + "                                    " + cartProduct.Price);
-            //    Console.WriteLine("");
-            //    Console.WriteLine("");
-            //    Console.WriteLine("Descontos:                                    " + cart.GetDiscount().Amount);
-            //}
+            ProcessCart();
 
+            Console.WriteLine("");
+            Console.WriteLine("");
+
+            foreach (var cartProduct in _products)
+            {
+                Console.WriteLine(cartProduct.Id + " " + cartProduct.Name + "            " + cartProduct.Price.ToString("C"));
+            }
+
+            Console.WriteLine("");
+            Console.WriteLine("");
+            Console.WriteLine("Descontos:            -" + discount);
+            Console.WriteLine("Total:                " + subtotal.ToString("C"));
+            Console.Read();
         }
+
+
     }
 }
